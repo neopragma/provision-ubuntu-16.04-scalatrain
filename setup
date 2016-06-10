@@ -56,6 +56,9 @@ fi
 # sudo sed -i -- 's/-Xmx1024/-Xmx1536/g' /opt/eclipse/eclipse.ini
 # popd
 
+sudo sed -i -- 's/-Xms256/-Xms1024/g' /opt/eclipse/eclipse.ini
+sudo sed -i -- 's/-Xmx1024/-Xmx1536/g' /opt/eclipse/eclipse.ini
+
 
 
 if [ ! -f "$HOME/Desktop/help.html" ]; then
