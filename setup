@@ -1,0 +1,66 @@
+#!/bin/bash
+#=================================================================================
+# Configure an instance of Ubuntu 16.04 Desktop as a Scala training environment.
+#
+# Version: 1.0.0
+# Date: 10 Jun 2016
+# Author: Dave Nicolette
+#=================================================================================
+
+clear
+echo ' '
+echo 'Provisioning this instance as a Scala training environment'
+echo 'setup script: version 1.0.0 10 Jun 2016'
+echo 'Assumes Ubuntu 16.04 Desktop 64-bit'
+echo ' '
+echo 'Applying system software updates...'
+
+sudo apt update
+sudo apt -y dist-upgrade
+
+# This could be true if the setup script was obtained from a source other than github
+
+if [ ! -f /usr/bin/git ]; then
+    echo ' '
+    echo 'git is required and is not installed'
+    echo 'intalling git...'
+    sudo apt install -y git
+fi
+
+export INSTALL_DIR="$HOME/provision-ubuntu-16.04-scalatrain"
+export COMMON_DIR="provision-ubuntu-16.04-common"
+
+# On a re-run of the setup script, this repo will already have been cloned
+
+if [ ! -d "./$COMMON_DIR" ]; then
+    git clone "git://github.com/neopragma/$COMMON_DIR"
+fi
+
+"./$COMMON_DIR/install_development_basics"
+"./$COMMON_DIR/install_java_development_tools"
+
+# echo ' '
+# echo 'Installing Scala IDE plugin for Eclipse'
+
+# pushd "$HOME/Downloads"
+# wget -O scala-plugin.zip http://download.scala-ide.org/sdk/lithium/e44/scala211/stable/update-site.zip
+# unzip scala-plugins.zip
+# sudo cp /opt/eclipse/plugins /opt/eclipse/plugins-orig
+# sudo cp /opt/eclipse/features /opt/eclipse/features-orig
+# sudo cp /opt/eclipse/eclipse.ini /opt/eclipse/eclipse-orig.ini
+# cd base/plugins
+# sudo cp * /opt/eclipse/plugins
+# cd ../features
+# sudo cp * /opt/eclipse/features
+# sudo sed -i -- 's/-Xms256/-Xms1024/g' /opt/eclipse/eclipse.ini
+# sudo sed -i -- 's/-Xmx1024/-Xmx1536/g' /opt/eclipse/eclipse.ini
+# popd
+
+
+
+if [ ! -f "$HOME/Desktop/help.html" ]; then
+    echo ' '
+    echo "Copying help file to $HOME/Desktop"
+    cp help.html "$HOME/Desktop/help.html"
+    firefox "$HOME/Desktop/help.html"
+fi
