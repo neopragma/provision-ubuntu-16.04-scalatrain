@@ -2,21 +2,26 @@
 #=================================================================================
 # Configure an instance of Ubuntu 16.04 Desktop as a Scala training environment.
 #
-# Version: 1.0.0
-# Date: 10 Jun 2016
+# Version: 2.0.0
+# Date: 11 Jun 2016
 # Author: Dave Nicolette
 #=================================================================================
 
 clear
 echo ' '
 echo 'Provisioning this instance as a Scala training environment'
-echo 'setup script: version 1.0.0 10 Jun 2016'
+echo 'setup script: version 2.0.0 11 Jun 2016'
 echo 'Assumes Ubuntu 16.04 Desktop 64-bit'
 echo ' '
 echo 'Applying system software updates...'
 
-sudo apt update
-sudo apt -y dist-upgrade
+#sudo apt update
+#sudo apt -y dist-upgrade
+
+echo ' '
+mkdir -p "$HOME/bin"
+echo "Prepending $HOME/bin to PATH at the end of $HOME/.profile"
+echo "PATH=$HOME/bin:$PATH" >> .profile
 
 # This could be true if the setup script was obtained from a source other than github
 
@@ -37,33 +42,76 @@ if [ ! -d "./$COMMON_DIR" ]; then
 fi
 
 "./$COMMON_DIR/install_development_basics"
-"./$COMMON_DIR/install_java_development_tools"
 
-# echo ' '
-# echo 'Installing Scala IDE plugin for Eclipse'
+echo ' '
+echo 'Installing OpenJDK 8'
 
-# pushd "$HOME/Downloads"
-# wget -O scala-plugin.zip http://download.scala-ide.org/sdk/lithium/e44/scala211/stable/update-site.zip
-# unzip scala-plugins.zip
-# sudo cp /opt/eclipse/plugins /opt/eclipse/plugins-orig
-# sudo cp /opt/eclipse/features /opt/eclipse/features-orig
-# sudo cp /opt/eclipse/eclipse.ini /opt/eclipse/eclipse-orig.ini
-# cd base/plugins
-# sudo cp * /opt/eclipse/plugins
-# cd ../features
-# sudo cp * /opt/eclipse/features
-# sudo sed -i -- 's/-Xms256/-Xms1024/g' /opt/eclipse/eclipse.ini
-# sudo sed -i -- 's/-Xmx1024/-Xmx1536/g' /opt/eclipse/eclipse.ini
-# popd
+sudo apt -y install openjdk-8-jdk-headless
 
-sudo sed -i -- 's/-Xms256/-Xms1024/g' /opt/eclipse/eclipse.ini
-sudo sed -i -- 's/-Xmx1024/-Xmx1536/g' /opt/eclipse/eclipse.ini
+echo ' '
+echo 'Installing Scala'
 
+pushd "$HOME/tmp"
+sudo apt remove scala-library scala
+sudo wget www.scala-lang.org/files/archive/scala-2.12.0-M4.deb
+sudo dpkg -i scala-2.12.0-M4.deb
+sudo apt update
+sudo apt -y install scala
 
+echo ' '
+echo 'Installing SBT'
 
-if [ ! -f "$HOME/Desktop/help.html" ]; then
-    echo ' '
-    echo "Copying help file to $HOME/Desktop"
-    cp help.html "$HOME/Desktop/help.html"
-    firefox "$HOME/Desktop/help.html"
+wget -O sbt-launch.jar http://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
+cp sbt-launch.jar "$HOME/bin"
+popd
+cp sbt "$HOME/bin"
+chmod +x "$HOME/bin/sbt"
+
+echo ' '
+echo 'Setting a Scala-themed desktop background image'
+gsettings set org.gnome.desktop.background picture-uri "file:///$INSTALL_DIR/background.jpg"
+
+echo ' '
+echo 'Setting Unity launcher favorites'
+gsettings set com.canonical.Unity.Launcher favorites "['nautilus.desktop', 'firefox.desktop', 'eclipse.desktop', 'atom.desktop', 'gnome-terminal.desktop']"
+
+echo ' '
+if [ -d "$HOME/workspace/starter" ]; then
+    echo "A directory named 'starter' already exists at $HOME/workspace."
+    echo "NOT COPYING the starter project to that location."
+    echo "If you need it later, you can copy it from $INSTALL_DIR/starter."
+else
+    echo "Copying the 'starter' project files to $HOME/workspace/starter"
+    pushd "$HOME/workspace"
+    cp -r "$INSTALL_DIR/starter" .
+    popd
 fi
+
+echo ' '
+if [ -f "$HOME/.sbt/0.13/plugins/build.sbt" ]; then
+    echo "A build.sbt file exists at $HOME/.sbt/0.13/plugins; not copying over it"
+else
+    echo "Copying build.sbt to $HOME/.sbt/0.13/plugins"
+    pushd "$HOME"
+    mkdir -p .sbt/0.13/plugins
+    cd .sbt/0.13/plugins
+    cp "$INSTALL_DIR/sbt-plugins/build.sbt" .
+    popd
+fi
+
+if [ ! -f "$HOME/bin/verify" ]; then
+    echo ' '
+    echo "Copying the verify script to $HOME/bin"
+    cp verify "$HOME/bin"
+fi
+
+echo ' '
+echo 'Verifying the configuration'
+echo '(You can do this any time by running the script, ~/bin/verify)'
+./verify
+
+echo ' '
+echo 'Copying the help file (html) to the desktop'
+cp help.html "$HOME/Desktop"
+
+firefox "$HOME/Desktop/help.html"

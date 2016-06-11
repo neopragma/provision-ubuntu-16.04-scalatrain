@@ -6,7 +6,8 @@ body {
   font-family: Verdana, Arial, sans-serif;
 }
 h1, h2, h3, h4 {
-  color: #AC270A;
+/*  color: #AC270A; */
+  color: #393;
   font-weight: bold;
 }
 h1 {
@@ -21,6 +22,19 @@ h3 {
 h4 {
   font-size: 110%;
 }
+.code {
+  font-family: Courier New, monospaced;
+}
+.box {
+  padding: 12px;
+  border: 1px dashed black;
+  background-color: #eee;
+}
+.callout {
+  margin: 24px;
+  padding: 12px;
+  background-color: #f7f5d0;
+}
 </style>
 </head>
 <body>
@@ -28,10 +42,50 @@ h4 {
   <p>
   This environment is meant to be suitable for training classes, code dojos, and individual practice for Scala programmers. If you configured the environment at the request of a training class instructor, then he/she has also given you one or more Github repository URLs for projects that will be used in the training class. Please clone and verify those projects before the class begins.
   </p>
-<h3>Manual installation steps</h3>
-<p>
-The first time you run Eclipse, the Scala plugin will prompt you for some configuraiton changes. Follow the suggestions and restart Eclipse.
-</p>
-
+  <h2>Manual installation &amp; configuration steps</h2>
+  <p class="callout">
+    Please note these instructions are supplemental to the configuration performed by the <span class="code">setup</span> script from <span class="code">provision-ubuntu-16.04-scalatrain</span>. These steps alone will not take you from a bare system to a ready-to-use Scala environment.
+  </p>
+  <p>
+    People use a variety of build tools and IDEs to develop with Scala. In preparing the environment setup script for this course, I found it to be exceedingly difficult to configure any tools to work easily with Scala and Scalatest. Some of the usual suspects, including Maven, Eclipse, and NetBeans, just seemed to be more trouble than they were worth.
+  </p>
+  <p>
+    We don't want to waste class time&mdash;that is, <em>your</em> time&mdash;working through configuration issues and cryptic messages stemming from version incompatibilities. If you already use Scala and you have a usable development environment, then use it for the class. Otherwise, you can build an environment with our <span class="code">setup</span> script or configure your own, but in either case please do it before class begins.
+  </p>
+  <p>
+    The Ubuntu configuration for the course uses JetBrains IntelliJ IDEA, Community Edition, as the IDE for class projects. It uses SBT as the dependency manager and build tool. These tools are extremely sensitive to minor version differences among Scala-related dependencies, and a bit tricky to configure, but less so than other tools.
+  </p>
+  <p>
+    IntelliJ IDEA Community Edition isn't available in a form that can be downloaded with <span class="code">wget</span> or <span class="code">curl</span> or some such tool and then built or configured in an unattended way. It has to be downloaded manually and then configured semi-manually. (I tried checking it out of github and building it, and it got one compilation error after a lengthy build. Not worth the hassle.)
+  </p>
+  <p>
+    <ol>
+      <li>Visit <a href="https://www.jetbrains.com/idea/download/#section=linux">https://www.jetbrains.com/idea/download/#section=linux</a> and download "Community."</li>
+      <li>Uncompressed the downloaded file:
+      <pre class="code box">
+tar xvzf idea*</pre></li>
+      <li>Move the expanded directory to <span class="code">/opt</li> and change the directory name to <span class="code">idea</span>:
+      <pre class="code box">
+cd /opt
+sudo cp -r ~/Downloads/idea-blah-blah .
+sudo mv idea-blah-blah idea</pre>
+        <li>Execute the script <span class="code">/opt/idea/bin/idea.sh</li>. It will prompt you to agree with license terms and give you the opportunity to override defaults. Take all defaults until you get to the list of plugins. Select "Scala" and press <em>Install</em>. Then resume answering the prompts until the script finishes.
+    </ol>
+  </p>
+  <h2>Running a Scala application within Intellij Idea</h2>
+  <p>
+    Once IntelliJ Idea is installed, you can import a Scala project such as the "starter" project. To run it, you must edit run configurations, hit the "plus" button, from Defaults choose "SBT Task", and give it a name. Running with that configuration will then be equivalent to running <span class="code">sbt run</span> from the project root directory on the command line.
+  </p>
+  <p>
+    You will need two run configurations for each project you develop during class:
+    <ul>
+      <li>run</li>
+      <li>test</li>
+    </ul>
+  </p>
+  <h2>Additional notes</h2>
+  <p>
+    The code used in the <em>starter</em> project is a slightly modified version of the sample code provided by Alvin Alexander at <a href="http://alvinalexander.com/scala/sbt-how-to-run-unit-tests-scalatest">http://alvinalexander.com/scala/sbt-how-to-run-unit-tests-scalatest</a>.
+  </p>
 </body>
 </html>

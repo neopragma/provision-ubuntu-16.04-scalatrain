@@ -3,15 +3,15 @@
 # See if this instance appears to have everything installed as expected.
 # This is for provision-ubuntu-16.04-javatrain.
 #
-# Version: 1.0.0
-# Date: 05 Jun 2016
+# Version: 2.0.0
+# Date: 11 Jun 2016
 # Author: Dave Nicolette
 #===============================================================================
 
 echo
 echo '============================================================='
 echo 'Verifying configuration of Scala training environment'
-echo 'This is version 1.0.0 of the verify script (10 Jun 2016)'
+echo 'This is version 2.0.0 of the verify script (11 Jun 2016)'
 
 declare -i errors=0
 
@@ -20,6 +20,7 @@ pkg[${#pkg[@]}]='build-essential'
 pkg[${#pkg[@]}]="linux-headers-$(uname -r)"
 pkg[${#pkg[@]}]='dkms'
 pkg[${#pkg[@]}]='python-software-properties'
+pkg[${#pkg[@]}]='scala '
 
 for name in "${pkg[@]}"
 do
@@ -33,17 +34,15 @@ done
 
 declare -a app
 app[${#app[@]}]="/usr/bin/atom"
-app[${#app[@]}]="/opt/eclipse/eclipse"
+app[${#app[@]}]="/opt/idea"
 app[${#app[@]}]="/usr/bin/git"
 app[${#app[@]}]="/usr/lib/jvm/java-8-openjdk-amd64/bin/java"
-app[${#app[@]}]="/usr/bin/mvn"
 
 declare -a ver
 ver[${#ver[@]}]=$(atom --version | grep "Atom" | awk -F" " '{print $3}')
-ver[${#ver[@]}]=$(git --version | awk -F" " '{print $3}')
+ver[${#ver[@]}]=$(cat /opt/idea/build.txt)
 ver[${#ver[@]}]=$(git --version | awk -F" " '{print $3}')
 ver[${#ver[@]}]=$(java -version 2> tmp; cat tmp | head -1 | awk -F" " '{print $3}')
-ver[${#ver[@]}]=$(mvn --version | head -1 | awk -F" " '{print $3}')
 
 #for name in "${app[@]}"
 element_count=${#app[@]}
@@ -58,12 +57,5 @@ do
   fi
   ((index++))
 done
-
-if [[ -e /opt/eclipse/plugins/org.scala-ide.scala210.jars_4.4.1.201605041056.jar ]]; then
-    echo "       Scala IDE plugin for Eclipse appears to be installed"
-else
-    echo "ERROR: Scala IDE plugin for Eclipse was expected but is not installed"
-    errors="${errors}+1"
-fi
 
 test "${errors}" -eq 0 && echo "...configuration is as expected." || echo "...${errors} expected package(s) or application(s) not found! Configuration may not function as desired."

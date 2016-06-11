@@ -16,10 +16,13 @@ sudo apt -y install git
 git clone http://github.com/neopragma/provision-ubuntu-16.04-javatrain
 ```
 
-
 <h3>3. Change to the repo directory and run the setup Script</h3>
 
 ```shell
 cd provision-ubuntu-16.04-javatrain
 ./setup
 ```
+
+<h3>4. Complete manual configuration steps
+
+Consult the ```help.html``` file to see how to complete the installation and configuration of the environment. The ```setup``` script copies that file to the Desktop folder of the Ubuntu instance.
