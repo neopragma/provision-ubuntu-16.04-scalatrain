@@ -23,6 +23,6 @@ cd provision-ubuntu-16.04-javatrain
 ./setup
 ```
 
-<h3>4. Complete manual configuration steps
+<h3>4. Complete manual configuration steps</h3>
 
 Consult the ```help.html``` file to see how to complete the installation and configuration of the environment. The ```setup``` script copies that file to the Desktop folder of the Ubuntu instance.
