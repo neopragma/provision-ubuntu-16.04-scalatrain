@@ -2,7 +2,7 @@
 #=================================================================================
 # Configure an instance of Ubuntu 16.04 Desktop as a Scala training environment.
 #
-# Version: 2.0.0
+# Version: 2.0.1
 # Date: 11 Jun 2016
 # Author: Dave Nicolette
 #=================================================================================
@@ -10,13 +10,13 @@
 clear
 echo ' '
 echo 'Provisioning this instance as a Scala training environment'
-echo 'setup script: version 2.0.0 11 Jun 2016'
+echo 'setup script: version 2.0.1 11 Jun 2016'
 echo 'Assumes Ubuntu 16.04 Desktop 64-bit'
 echo ' '
 echo 'Applying system software updates...'
 
-#sudo apt update
-#sudo apt -y dist-upgrade
+sudo apt update
+sudo apt -y dist-upgrade
 
 echo ' '
 mkdir -p "$HOME/bin"
@@ -35,11 +35,7 @@ fi
 export INSTALL_DIR="$HOME/provision-ubuntu-16.04-scalatrain"
 export COMMON_DIR="provision-ubuntu-16.04-common"
 
-# On a re-run of the setup script, this repo will already have been cloned
-
-if [ ! -d "./$COMMON_DIR" ]; then
-    git clone "git://github.com/neopragma/$COMMON_DIR"
-fi
+git clone "git://github.com/neopragma/$COMMON_DIR"
 
 "./$COMMON_DIR/install_development_basics"
 
@@ -82,6 +78,7 @@ if [ -d "$HOME/workspace/starter" ]; then
     echo "If you need it later, you can copy it from $INSTALL_DIR/starter."
 else
     echo "Copying the 'starter' project files to $HOME/workspace/starter"
+    mkdir -p "$HOME/workspace"
     pushd "$HOME/workspace"
     cp -r "$INSTALL_DIR/starter" .
     popd
@@ -114,4 +111,4 @@ echo ' '
 echo 'Copying the help file (html) to the desktop'
 cp help.html "$HOME/Desktop"
 
-firefox "$HOME/Desktop/help.html"
+firefox "$HOME/Desktop/help.html" &

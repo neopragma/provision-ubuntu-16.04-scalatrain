@@ -41,11 +41,26 @@ h4 {
   <h1>What is this?</h1>
   <p>
   This environment is meant to be suitable for training classes, code dojos, and individual practice for Scala programmers. If you configured the environment at the request of a training class instructor, then he/she has also given you one or more Github repository URLs for projects that will be used in the training class. Please clone and verify those projects before the class begins.
+</p>
+<p>
+  The userid is <span class="code">training</span> and the password is <span class="code">training</span>. The <span class="code">training</span> user account is an administrator account. (Obviously this environment is not meant for high security.)
   </p>
   <h2>Manual installation &amp; configuration steps</h2>
   <p class="callout">
     Please note these instructions are supplemental to the configuration performed by the <span class="code">setup</span> script from <span class="code">provision-ubuntu-16.04-scalatrain</span>. These steps alone will not take you from a bare system to a ready-to-use Scala environment.
   </p>
+  <h3>Log out and log in again</h3>
+  <p>
+    The <span class="code">setup</span> script modified <span class="code">~/.profile</span>. The only way to make the changes sticky (beyond the current shell) is to restart the session.
+  </p>
+  <h3>Ensure the starter application can build and run</h3>
+  <p>
+    The <span class="code">setup</span> script installs Scala and Scalatest and copies a small example project to <span class="code">~/workspace/starter</span>. Open a Terminal window and navigate to that directory. Run the following command:
+    <pre class="code box">
+sbt test</pre>
+    If Scala and Scalatest were installed correctly, then the starter application will build, its tests will run successfully, and it will run to display "hello" on the console. This will take some time, as <span class="code">sbt</span> must download a number of dependencies.
+  </p>
+  <h3>Install JebBrains IntelliJ IDEA</h3>
   <p>
     People use a variety of build tools and IDEs to develop with Scala. In preparing the environment setup script for this course, I found it to be exceedingly difficult to configure any tools to work easily with Scala and Scalatest. Some of the usual suspects, including Maven, Eclipse, and NetBeans, just seemed to be more trouble than they were worth.
   </p>
@@ -61,18 +76,18 @@ h4 {
   <p>
     <ol>
       <li>Visit <a href="https://www.jetbrains.com/idea/download/#section=linux">https://www.jetbrains.com/idea/download/#section=linux</a> and download "Community."</li>
-      <li>Uncompressed the downloaded file:
+      <li>Uncompress the downloaded file:
       <pre class="code box">
 tar xvzf idea*</pre></li>
-      <li>Move the expanded directory to <span class="code">/opt</li> and change the directory name to <span class="code">idea</span>:
+      <li>Move the expanded directory to <span class="code">/opt</span> and change the directory name to <span class="code">idea</span>:
       <pre class="code box">
 cd /opt
 sudo cp -r ~/Downloads/idea-blah-blah .
 sudo mv idea-blah-blah idea</pre>
-        <li>Execute the script <span class="code">/opt/idea/bin/idea.sh</li>. It will prompt you to agree with license terms and give you the opportunity to override defaults. Take all defaults until you get to the list of plugins. Select "Scala" and press <em>Install</em>. Then resume answering the prompts until the script finishes.
+        <li>Execute the script <span class="code">/opt/idea/bin/idea.sh</span>. It will prompt you to agree with license terms and give you the opportunity to override defaults. Take all defaults until you get to the <em>Download featured plugins</em> dialog. Select "Scala" and press <em>Install</em>. Then resume answering the prompts until the script finishes.
     </ol>
   </p>
-  <h2>Running a Scala application within Intellij Idea</h2>
+  <h2>Running a Scala application within IntelliJ IDEA</h2>
   <p>
     Once IntelliJ Idea is installed, you can import a Scala project such as the "starter" project. To run it, you must edit run configurations, hit the "plus" button, from Defaults choose "SBT Task", and give it a name. Running with that configuration will then be equivalent to running <span class="code">sbt run</span> from the project root directory on the command line.
   </p>
@@ -83,6 +98,25 @@ sudo mv idea-blah-blah idea</pre>
       <li>test</li>
     </ul>
   </p>
+  <h3>At this point...</h3>
+  <p>
+    ...the following should be true:
+    <ul>
+      <li>When you run the <span class="code">verify</span> script it reports that the configuration is as expected (no software is missing, as far as the script can tell).</li>
+      <li>In directory <span class="code">~/workspace/starter</span>, the command
+        <pre class="code box">
+sbt test</pre>
+        causes the sample application to build, run its tests (which pass), and display "hello" on the console. The run ends with a "success" message on the console.
+      </li>
+      <li>You defined a runtime configuration inside of IntelliJ IDEA of type <span class="code">SBT Task</span> that specifies the <span class="code">test</span> command for sbt. You imported the <span class="code">starter</span> project. When you run the <span class="code">test</span> task, the result is the same as when you run the application from the command line.
+      </li>
+    </ul>
+  </p>
+  <p>
+    You're ready to work.
+  </p>
+
+
   <h2>Additional notes</h2>
   <p>
     The code used in the <em>starter</em> project is a slightly modified version of the sample code provided by Alvin Alexander at <a href="http://alvinalexander.com/scala/sbt-how-to-run-unit-tests-scalatest">http://alvinalexander.com/scala/sbt-how-to-run-unit-tests-scalatest</a>.
